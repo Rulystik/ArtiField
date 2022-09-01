@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class OptionsMenu : MenuBase
+namespace UI.Menues
 {
-    [SerializeField] private Button backButton;
-    public override void Init()
+    public class OptionsMenu : BaseMenu
     {
-        InitListButtons();
-        backButton.onClick.AddListener(BackButtonDown);
-        gameObject.SetActive(false);
+        [SerializeField] private Button backButton;
+        public override void Init()
+        {
+            GetChildrenRect();
+            // backButton.onClick.AddListener();
+            gameObject.SetActive(false);
+        }
     }
 }

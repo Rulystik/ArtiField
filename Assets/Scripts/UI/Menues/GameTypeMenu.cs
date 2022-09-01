@@ -2,31 +2,34 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameTypeMenu : MenuBase
+namespace UI.Menues
 {
-    [SerializeField] private Button simpleGameButton;
-    [SerializeField] private Button adnvancedGameButton;
-    [SerializeField] private Button backButton;
-
-
-    public Action<GameType> simpleOrAvancedGameAction;
-
-    public override void Init()
+    public class GameTypeMenu : BaseMenu
     {
-        InitListButtons();
+        [SerializeField] private Button simpleGameButton;
+        [SerializeField] private Button adnvancedGameButton;
+        [SerializeField] private Button backButton;
 
-        simpleGameButton.onClick.AddListener(SimpleGame);
-        adnvancedGameButton.onClick.AddListener(AdvancedGame);
-        backButton.onClick.AddListener(BackButtonDown);
+
+        public Action<GameType> simpleOrAvancedButtonAction;
+
+        public override void Init()
+        {
+            GetChildrenRect();
+
+            simpleGameButton.onClick.AddListener(SimpleGame);
+            adnvancedGameButton.onClick.AddListener(AdvancedGame);
+            // backButton.onClick.AddListener(BackButtonDown);
         
-        gameObject.SetActive(false);
-    }
-    private void SimpleGame()
-    {
-        simpleOrAvancedGameAction?.Invoke(GameType.Simple);
-    }
-    private void AdvancedGame()
-    {
-        simpleOrAvancedGameAction?.Invoke(GameType.Advanced);
+            gameObject.SetActive(false);
+        }
+        private void SimpleGame()
+        {
+            simpleOrAvancedButtonAction?.Invoke(GameType.Simple);
+        }
+        private void AdvancedGame()
+        {
+            simpleOrAvancedButtonAction?.Invoke(GameType.Advanced);
+        }
     }
 }

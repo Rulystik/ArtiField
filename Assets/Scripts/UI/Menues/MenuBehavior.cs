@@ -3,163 +3,156 @@ using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 
-public class MenuBehavior
+namespace UI.Menues
 {
-    private List<MenuBase> MenuList { get;}
-    private RectTransform menuBG;
+    public class MenuBehavior
+    {
+        private List<BaseMenu> MenuList { get;}
+        private RectTransform menuBG;
 
-    private Dictionary<int, MenuBase> queueMenuDic;
+        private Dictionary<int, BaseMenu> queueMenuDic;
     
-    public  MenuBehavior(List<MenuBase> list)
-    {
-        queueMenuDic = new Dictionary<int, MenuBase>();
-        MenuList = new List<MenuBase>();
-        foreach (var menuBase in list)
+        public  MenuBehavior(List<BaseMenu> list)
         {
-            MenuList.Add(menuBase);
+            queueMenuDic = new Dictionary<int, BaseMenu>();
+            MenuList = list;
+            menuListInit();
+            menuBG = MenuList.FirstOrDefault().transform.parent.GetComponent<RectTransform>();
+            menuBG.gameObject.SetActive(true);
         }
-        menuListInit();
-        menuBG = MenuList.FirstOrDefault().transform.parent.GetComponent<RectTransform>();
-    }
-    private void menuListInit()
-    {
-        foreach (var obj in MenuList)
+        private void menuListInit()
         {
-            obj.Init();
-        }
-    }
-    
-    public void ActivatorMenu(MenuBase menu = null, float deley = 0)
-    {
-        foreach (var menuBase in MenuList)
-        {
-            if (menuBase.gameObject.activeSelf)
+            foreach (var obj in MenuList)
             {
-                ScaleDown(menuBase , menu);
-                return;
+                obj.Init();
             }
         }
-
-        queueMenuDic.Clear();
-        
-        if (menu != null)
-        {
-            queueMenuDic.Add(0, menu);
-            ScaleBG(Vector3.one, deley);
-            ScaleUp(menu, deley + 0.4f);
-        }
-        else
+    
+        public void ActivatorMenu(BaseMenu menu = null, float deley = 0)
         {
             foreach (var menuBase in MenuList)
             {
-                var pauseMenu = menuBase as PauseMenu;
-                if (pauseMenu != null)
+                if (menuBase.gameObject.activeSelf)
                 {
-                    queueMenuDic.Add(0, menuBase);
-                    ScaleBG(Vector3.one, deley);
-                    ScaleUp(pauseMenu, deley + 0.4f);
+                    ScaleDown(menuBase , menu);
                     return;
                 }
             }
-        }
-        
-        
-    }
 
-    public void ScaleDown(MenuBase downMenu, MenuBase upMenu = null )
-    {
-        var downList = downMenu.AllObjectsRect;
-        float delay = 0f;
+            queueMenuDic.Clear();
         
-        for (int j = 0; j < downList.Count; j++)
-        {
-            var obj = downList[j];
-
-            if (j == downList.Count - 1 )
+            if (menu != null)
             {
-                DOVirtual.DelayedCall(delay, () => obj.DOScale(Vector3.zero, 0.2f));
-                DOVirtual.DelayedCall(delay + 0.2f, () => downMenu.ActiveOff());
+                queueMenuDic.Add(0, menu);
+                ScaleUpOrDownBG(Vector3.one, deley);
+                ScaleUp(menu, deley + 0.4f);
+            }
+            else
+            {
+                foreach (var menuBase in MenuList)
+                {
+                    var pauseMenu = menuBase as PauseMenu;
+                    if (pauseMenu != null)
+                    {
+                        queueMenuDic.Add(0, menuBase);
+                        ScaleUpOrDownBG(Vector3.one, deley);
+                        ScaleUp(pauseMenu, deley + 0.4f);
+                        return;
+                    }
+                }
+            }
+        
+        
+        }
+
+        public void ScaleDown(BaseMenu downMenu, BaseMenu upMenu = null )
+        {
+            var downList = downMenu.AllChildrenRect;
+            float delay = 0f;
+        
+            for (int j = 0; j < downList.Count; j++)
+            {
+                var obj = downList[j];
+
+                if (j == downList.Count - 1 )
+                {
+                    DOVirtual.DelayedCall(delay, () => obj.DOScale(Vector3.zero, 0.2f));
+                    DOVirtual.DelayedCall(delay + 0.2f, () => downMenu.ActiveOff());
                 
-                if (upMenu != null)
-                {
-                    ScaleUp(upMenu, delay);
-                    var key = GetKey(downMenu);
-                    queueMenuDic.Add(key+1, upMenu);
-                    return;
+                    if (upMenu != null)
+                    {
+                        ScaleUp(upMenu, delay);
+                        var key = GetKey(downMenu);
+                        queueMenuDic.Add(key+1, upMenu);
+                        return;
+                    }
+                    if (queueMenuDic.Count > 1)
+                    {
+                        var key = GetKey(downMenu);
+                        queueMenuDic.Remove(key);
+                        ScaleUp(queueMenuDic[key-1], delay);
+                    }
+                    else
+                    {
+                        ScaleUpOrDownBG(Vector3.zero, delay);
+                    }
                 }
-                Debug.Log(queueMenuDic.Count);
-                if (queueMenuDic.Count > 1)
-                {
-                    var key = GetKey(downMenu);
-                    queueMenuDic.Remove(key);
-                    ScaleUp(queueMenuDic[key-1], delay);
-                }
-                else
-                {
-                    ScaleBG(Vector3.zero, delay);
-                }
+
+                DOVirtual.DelayedCall(delay, () => obj.DOScale(Vector3.zero, 0.2f));
+                delay += 0.1f;
 
             }
-
-            DOVirtual.DelayedCall(delay, () => obj.DOScale(Vector3.zero, 0.2f));
-            delay += 0.1f;
-
         }
-    }
 
-    private int GetKey(MenuBase menu)
-    {
-        foreach (var obj in queueMenuDic)
+        private int GetKey(BaseMenu menu)
         {
-            if (obj.Value == menu)
+            foreach (var obj in queueMenuDic)
             {
-                return obj.Key;
+                if (obj.Value == menu)
+                {
+                    return obj.Key;
+                }
+            }
+
+            return 0;
+        }
+
+        public void ScaleUp(BaseMenu upMenu = null ,float deley = 0)
+        {
+            var upList = upMenu.AllChildrenRect;
+        
+            float i = deley;
+        
+            DOVirtual.DelayedCall(i, () => upMenu.ActiveOn());
+
+            for (int j = 0; j < upList.Count; j++)
+            {
+                var o = upList[j];
+                o.DOScale(Vector3.zero, 0);
+
+                DOVirtual.DelayedCall(i, () => o.DOScale(Vector3.one, 0.2f));
+                i += 0.1f;
+            }
+
+        }
+    
+        private void ScaleUpOrDownBG(Vector3 scale, float deley = 0)
+        {
+            if (scale == Vector3.one)
+            {
+                menuBG.localScale = Vector3.zero;
+                DOVirtual.DelayedCall(deley, () => menuBG.DOScale(scale, 0.4f));
+            }
+            else
+            {
+                menuBG.localScale = Vector3.one;
+                DOVirtual.DelayedCall(deley, () => menuBG.DOScale(scale, 0.4f));
             }
         }
-
-        return 0;
-    }
-
-    public void ScaleUp(MenuBase upMenu = null ,float deley = 0)
-    {
-        var upList = upMenu.AllObjectsRect;
-        
-        float i = deley;
-        
-        DOVirtual.DelayedCall(i, () => upMenu.ActiveOn());
-
-        for (int j = 0; j < upList.Count; j++)
+        public void CloseAllMenu()
         {
-            var o = upList[j];
-            o.DOScale(Vector3.zero, 0);
-
-            DOVirtual.DelayedCall(i, () => o.DOScale(Vector3.one, 0.2f));
-            i += 0.1f;
+            queueMenuDic.Clear();
+            ActivatorMenu();
         }
-
-    }
-    
-    private void ScaleBG(Vector3 scale, float deley = 0)
-    {
-        if (scale == Vector3.one)
-        {
-            menuBG.localScale = Vector3.zero;
-            DOVirtual.DelayedCall(deley, () => menuBG.DOScale(scale, 0.4f));
-        }
-        else
-        {
-            menuBG.localScale = Vector3.one;
-            DOVirtual.DelayedCall(deley, () => menuBG.DOScale(scale, 0.4f));
-        }
-    }
-
-    public void BackButtonDown()
-    {
-        ActivatorMenu();
-    }
-    public void CloseAllMenu()
-    {
-        queueMenuDic.Clear();
-        ActivatorMenu();
     }
 }

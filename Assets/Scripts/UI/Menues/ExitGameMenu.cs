@@ -2,24 +2,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ExitGameMenu : MenuBase
+namespace UI.Menues
 {
-    [SerializeField] private Button yesButton;
-    [SerializeField] private Button noButton;
+    public class ExitGameMenu : BaseMenu
+    {
+        [SerializeField] private Button yesButton;
+        [SerializeField] private Button noButton;
 
-    public Action QuitButtonAction;
-    public override void Init()
-    {
-        InitListButtons();
+        public Action QuitButtonAction;
+        public Action BackAction;
+        public override void Init()
+        {
+            GetChildrenRect();
         
-        yesButton.onClick.AddListener(YesButtonDown);
-        noButton.onClick.AddListener(BackButtonDown);
+            yesButton.onClick.AddListener(YesButtonDown);
+            // noButton.onClick.AddListener(BackButtonDown);
         
-        gameObject.SetActive(false);
+            gameObject.SetActive(false);
         
-    }
-    private void YesButtonDown()
-    {
-        QuitButtonAction?.Invoke();
+        }
+        private void YesButtonDown()
+        {
+            QuitButtonAction?.Invoke();
+        }
+
     }
 }

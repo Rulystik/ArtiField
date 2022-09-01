@@ -2,38 +2,46 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenu : MenuBase
+namespace UI.Menues
 {
-    [SerializeField] private Button singleGameButton;
-    [SerializeField] private Button multiGameButton;
-    [SerializeField] private Button optionsButton;
-    [SerializeField] private Button exitGameButton;
-    
-
-    
-    public Action<GameType> SingleMultiButtonAction;
-
-
-    public override void Init()
+    public class MainMenu : BaseMenu
     {
-        InitListButtons();
+        [SerializeField] private Button singleGameButton;
+        [SerializeField] private Button multiGameButton;
+        [SerializeField] private Button optionsButton;
+        [SerializeField] private Button exitGameButton;
+    
+
+    
+        public Action<GameType> SingleMultiButtonAction;
+        public Action OptionsButtonAction;
+
+
+        public override void Init()
+        {
+            GetChildrenRect();
         
-        singleGameButton.onClick.AddListener(SingleButtonDown);
-        multiGameButton.onClick.AddListener(MultiButtonDown);
-        optionsButton.onClick.AddListener(OptionsButtonDown);
-        exitGameButton.onClick.AddListener(BackButtonDown);
+            singleGameButton.onClick.AddListener(SingleButtonDown);
+            multiGameButton.onClick.AddListener(MultiButtonDown);
+            // exitGameButton.onClick.AddListener(BackButtonDown);
+            optionsButton.onClick.AddListener(OptionsButtonDown);
 
 
-        gameObject.SetActive(false);
+            // gameObject.SetActive(false);
+        }
+        private void SingleButtonDown()
+        {
+            SingleMultiButtonAction?.Invoke(GameType.Single);
+        }
+
+        private void MultiButtonDown()
+        {
+            SingleMultiButtonAction?.Invoke(GameType.Multi);
+        }
+        private void OptionsButtonDown()
+        {
+            OptionsButtonAction?.Invoke();
+        }
+
     }
-    private void SingleButtonDown()
-    {
-        SingleMultiButtonAction?.Invoke(GameType.Single);
-    }
-
-    private void MultiButtonDown()
-    {
-        SingleMultiButtonAction?.Invoke(GameType.Multi);
-    }
-
 }

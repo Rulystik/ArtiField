@@ -51,7 +51,7 @@ public class Model
             for (int j = 0; j < height; j++)
             {
                 var id = i == 0 ? j : i * 100 + j; 
-                field.Add(id, new CellData());
+                field.Add(id, new CellData(id));
             }
         }
     }
@@ -127,4 +127,10 @@ public class Model
 
         return null;
     }
+
+    public void SetArtilleryOnCell(int id, Artillery artillery)
+    {
+        field[id].Artillery = artillery;
+    }
+        
 }

@@ -2,36 +2,44 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseMenu : MenuBase
+namespace UI.Menues
 {
-    [SerializeField] private Button resumeButton;
-    [SerializeField] private Button leaveButton;
-    [SerializeField] private Button optionsButton;
-    [SerializeField] private Button exitButton;
+    public class PauseMenu : BaseMenu
+    {
+        [SerializeField] private Button resumeButton;
+        [SerializeField] private Button leaveButton;
+        [SerializeField] private Button optionsButton;
+        [SerializeField] private Button exitButton;
 
-    public Action ResumeButtonAction;
-    public Action LeaveButtonAction;
-    public Action ExitGameAction;
+        public Action LeaveButtonAction;
+        public Action ExitButtonAction;
+        public Action OptionsButtonAction;
     
-    public override void Init()
-    {
-        InitListButtons();
+        public override void Init()
+        {
+            GetChildrenRect();
 
-        leaveButton.onClick.AddListener(LeaveTheGame);
-        optionsButton.onClick.AddListener(OptionsButtonDown);
-        exitButton.onClick.AddListener(ExitGame);
-        resumeButton.onClick.AddListener(BackButtonDown);
+            leaveButton.onClick.AddListener(LeaveTheGame);
+            optionsButton.onClick.AddListener(OptionsButtonDown);
+            exitButton.onClick.AddListener(ExitGame);
+            // resumeButton.onClick.AddListener(BackButtonDown);
 
-        gameObject.SetActive(false);
-    }
+            gameObject.SetActive(false);
+        }
 
-    private void ExitGame()
-    {
-        ExitGameAction?.Invoke();
-    }
+        private void OptionsButtonDown()
+        {
+            OptionsButtonAction?.Invoke();
+        }
 
-    private void LeaveTheGame()
-    {
-        LeaveButtonAction?.Invoke();
+        private void ExitGame()
+        {
+            ExitButtonAction?.Invoke();
+        }
+
+        private void LeaveTheGame()
+        {
+            LeaveButtonAction?.Invoke();
+        }
     }
 }

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8419e26752ab948bd0bc2fe65921a7, type: 3}
+  m_Name: SpritesConfig
+  m_EditorClassIdentifier: 
+  _icons:
+  - _name: CrossFire
+    _sprite: {fileID: 21300000, guid: 4e47020090f7d394fbc98b4333d579db, type: 3}
+  - _name: Artillery
+    _sprite: {fileID: 21300000, guid: d1df42f07f4d8074abd2fe0b3647a70c, type: 3}
+  - _name: Missed
+    _sprite: {fileID: 21300000, guid: 52a9e3d877d35c245831afabb3fc257a, type: 3}
+  - _name: GameBG
+    _sprite: {fileID: 21300000, guid: eac90a5c05173fa49a8e3162c63f1d3c, type: 3}
+  - _name: TileBG
+    _sprite: {fileID: 21300000, guid: f63b44b27ee58894b920ad3e5de68a2e, type: 3}

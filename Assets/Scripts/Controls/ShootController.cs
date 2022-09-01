@@ -1,76 +1,80 @@
 ﻿using DG.Tweening;
+using UI;
 using Random = UnityEngine.Random;
 
-public class ShootController
+namespace Controls
 {
-    private BattleFieldView BattleFieldView { get; }
-    private Model Model { get; }
-    private int? prevCellId;
-    private int targetId;
-
-
-    public ShootController(BattleFieldView fieldView, Model model)
+    public class ShootController
     {
-        BattleFieldView = fieldView;
-        Model = model;
-        BattleFieldView.ShootButtonDownAction += Shoot;
-        BattleFieldView.EnemyFieldOnPosAction += SetShootingCrossRandomPos;
-    }
+        private BattleFieldView BattleFieldView { get; }
+        private Model Model { get; }
+        private int? prevCellId;
+        private int targetId;
 
-    private void SetShootingCrossRandomPos()
-    {
-        int x = Random.Range(0, GameSettings.Instance.WidthField - 1);
-        int y = Random.Range(0, GameSettings.Instance.HeightField - 1);
-        int idPos = x == 0 ? y : x * 100 + y;
 
-        if (Model.GetEnemyCellState(idPos) == CellState.Clear)
+        public ShootController(BattleFieldView fieldView, Model model)
         {
-            prevCellId = null;
-            SetShootingCrossPos(idPos);
+            BattleFieldView = fieldView;
+            Model = model;
+            BattleFieldView.ShootButtonDownAction += Shoot;
+            BattleFieldView.EnemyFieldOnPosAction += SetShootingCrossRandomPos;
         }
-        else
+
+        private void SetShootingCrossRandomPos()
         {
-            SetShootingCrossRandomPos();
-        }
-    }
+            int x = Random.Range(0, GameSettings.Instance.WidthField - 1);
+            int y = Random.Range(0, GameSettings.Instance.HeightField - 1);
+            int idPos = x == 0 ? y : x * 100 + y;
 
-    public void SetShootingCrossPos(int id)
-    {
-        if (Model.GetEnemyCellState(id) == CellState.Clear)
-        {
-            var enemyTile =  BattleFieldView.enemyViewObjects[id];
-            var sprite = BattleFieldView.GetCrossImage();
-            enemyTile.SetStateIcon(sprite);
-
-            targetId = id;
-
-            if (prevCellId != id && prevCellId != null)
+            if (Model.GetEnemyCellState(idPos) == CellState.Clear)
             {
-                CellState prevCellState = Model.GetEnemyCellState((int)prevCellId);
-
-                if (prevCellState == CellState.Clear)
-                {
-                    BattleFieldView.enemyViewObjects[(int)prevCellId].DeactivateStateTile();
-                }
+                prevCellId = null;
+                SetShootingCrossPos(idPos);
             }
-            prevCellId = id;
+            else
+            {
+                SetShootingCrossRandomPos();
+            }
         }
+
+        public void SetShootingCrossPos(int id)
+        {
+            if (Model.GetEnemyCellState(id) == CellState.Clear)
+            {
+                var enemyTile =  BattleFieldView.enemyViewObjects[id];
+                var sprite = BattleFieldView.GetCrossImage();
+                enemyTile.SetStateIcon(sprite);
+
+                targetId = id;
+
+                if (prevCellId != id && prevCellId != null)
+                {
+                    CellState prevCellState = Model.GetEnemyCellState((int)prevCellId);
+
+                    if (prevCellState == CellState.Clear)
+                    {
+                        BattleFieldView.enemyViewObjects[(int)prevCellId].DeactivateStateTile();
+                    }
+                }
+                prevCellId = id;
+            }
         
 
-    }
+        }
 
-    public void Shoot()
-    {
-        // Send CellID for check if get target
-        // if got target need to get ID and state arti
-        // shoot again or enemy shoot
+        public void Shoot()
+        {
+            // Send CellID for check if get target
+            // if got target need to get ID and state arti
+            // shoot again or enemy shoot
         
         
 
-        BattleFieldView.enemyViewObjects[targetId].DeactivateStateTile();
-        DOVirtual.DelayedCall(1, () => BattleFieldView.SwapFields());
+            BattleFieldView.enemyViewObjects[targetId].DeactivateStateTile();
+            DOVirtual.DelayedCall(1, () => BattleFieldView.SwapFields());
 
-    }
+        }
 
    
+    }
 }

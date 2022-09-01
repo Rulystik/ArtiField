@@ -1,14 +1,17 @@
 ﻿
+using Controls;
+using UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameBootStrapper : MonoBehaviour
 {
-    [SerializeField] private View view;
-    [SerializeField] private BattleFieldView battleFieldView;
+    [SerializeField] private View _view;
+    [SerializeField] private BattleFieldView _battleFieldView;
     private Controller controller;
 
     void Start()
     {
-        controller = new Controller(view, battleFieldView);
+        controller = new Controller(_view, _battleFieldView);
     }
 }
