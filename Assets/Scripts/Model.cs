@@ -1,20 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public enum GameType
-{
-    Simple,
-    Advanced,
-    Single,
-    Multi
-}
-public enum CellState
-{
-    Clear,
-    Missed,
-    Damaged,
-    Destroyed
-}
+
 
 public class Model
 {

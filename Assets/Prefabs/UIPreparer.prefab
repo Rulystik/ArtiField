@@ -47,8 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a0657c99bfdd545b8adecdab8ab28d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _screenArea: {fileID: 6891861500681551006}
+  _screenArea: {fileID: 6891861500681551005}
   _blackTransition: {fileID: 7373228538923470952}
+  _speedFading: 0.3
 --- !u!1 &6891861500547829209
 GameObject:
   m_ObjectHideFlags: 0

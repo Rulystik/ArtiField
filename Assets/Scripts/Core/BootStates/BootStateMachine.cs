@@ -1,59 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Data;
 using Core.Services;
-using UI.Menues;
 
 namespace Core.States
 {
-    public class BootStateMachine
+    public class BootStateMachine 
     {
-        private IState _currentState;
-        private IState _newState;
         private Dictionary<Type, IState> _states;
+
+        private IState _currentState;
+        private IState _nextState;
         
-        //No Services
         private Factory _factory;
         private SceneLoader _sceneLoader;
-        private GlobalParams _globalParams;
+        private BootData _globalData;
         //
         
         public BootStateMachine(ICorutine coroutine)
         {
             _factory = new Factory();
             _sceneLoader = new SceneLoader(coroutine);
-            _globalParams = new GlobalParams();
-            
+            _globalData = new BootData();
+
             _states = new Dictionary<Type, IState>()
             {
-                //No Services
-                // [typeof(BootState)] = new BootState(this, coroutine), 
-                [typeof(MainMenuState)] = new MainMenuState(this, _factory, _sceneLoader, _globalParams),
-                [typeof(PlayGameState)] = new PlayGameState(this, _factory, _sceneLoader, _globalParams),
-                [typeof(MultiplayerLobbyState)] = new MultiplayerLobbyState(this, _factory, _sceneLoader, _globalParams)
+                [typeof(MainMenuState)] = new MainMenuState(_factory, _sceneLoader, _globalData),
+                [typeof(PlayGameState)] = new PlayGameState(_factory, _sceneLoader, _globalData),
+                [typeof(MultiplayerLobbyState)] = new MultiplayerLobbyState(_factory, _sceneLoader, _globalData)
             };
+            foreach (var state in _states)
+            {
+                state.Value.OnChangeState += StateChange;
+                state.Value.OnExitDone += EnterState;
+            }
             
-            SetState<MainMenuState>();
+            StateChange();
+            EnterState();
         }
         
-
-        public void SetState<TState>() where TState : IState
+        public void StateChange()
         {
-            _newState = _states[typeof(TState)];
+            switch (_globalData.BootState)
+            {
+                case BootStateEnum.Game :
+                    SetNextState<PlayGameState>();
+                    break;
+                case BootStateEnum.Menu :
+                    SetNextState<MainMenuState>();
+                    break;
+                case BootStateEnum.Lobby :
+                    SetNextState<MultiplayerLobbyState>();
+                    break;
+            }
+            _currentState?.Exit();
+        }
 
-            if (_currentState == null)
-            {
-                EnterOnExitDone();
-            }
-            else
-            {
-                _currentState.Exit(EnterOnExitDone);
-            }
-            
-        }
-        private void EnterOnExitDone()
+        private void SetNextState<TState>() where TState : IState
         {
-            _newState.Enter();
-            _currentState = _newState;
+            _nextState = _states[typeof(TState)];
         }
+        private void EnterState()
+        {
+            _currentState = _nextState;
+            _currentState.Enter();
+        }
+        
     }
 }

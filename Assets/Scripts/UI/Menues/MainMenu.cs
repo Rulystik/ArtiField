@@ -15,20 +15,30 @@ namespace UI.Menues
     
         public Action<GameType> SingleMultiButtonAction;
         public Action OptionsButtonAction;
+        public Action ExitButtonAction;
 
 
-        public override void Init()
+        public void OnEnable()
         {
             GetChildrenRect();
         
             singleGameButton.onClick.AddListener(SingleButtonDown);
             multiGameButton.onClick.AddListener(MultiButtonDown);
-            // exitGameButton.onClick.AddListener(BackButtonDown);
+            exitGameButton.onClick.AddListener(ExitButtonDown);
             optionsButton.onClick.AddListener(OptionsButtonDown);
-
-
-            // gameObject.SetActive(false);
+            SetScaleZero();
         }
+
+        public void Init(Action<GameType> singleMulti)
+        {
+            SingleMultiButtonAction += singleMulti;
+        }
+
+        private void ExitButtonDown()
+        {
+            ExitButtonAction?.Invoke();
+        }
+
         private void SingleButtonDown()
         {
             SingleMultiButtonAction?.Invoke(GameType.Single);

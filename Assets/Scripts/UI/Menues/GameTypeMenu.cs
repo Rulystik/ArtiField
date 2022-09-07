@@ -13,21 +13,26 @@ namespace UI.Menues
 
         public Action<GameType> simpleOrAvancedButtonAction;
 
-        public override void Init()
+        public void OnEnable()
         {
             GetChildrenRect();
 
-            simpleGameButton.onClick.AddListener(SimpleGame);
-            adnvancedGameButton.onClick.AddListener(AdvancedGame);
-            // backButton.onClick.AddListener(BackButtonDown);
+            simpleGameButton.onClick.AddListener(SimpleGameButtonDown);
+            adnvancedGameButton.onClick.AddListener(AdvancedGameButtonDown);
+            backButton.onClick.AddListener(BackButtonDown);
         
-            gameObject.SetActive(false);
         }
-        private void SimpleGame()
+
+        private void BackButtonDown()
+        {
+            BackAction?.Invoke();
+        }
+
+        private void SimpleGameButtonDown()
         {
             simpleOrAvancedButtonAction?.Invoke(GameType.Simple);
         }
-        private void AdvancedGame()
+        private void AdvancedGameButtonDown()
         {
             simpleOrAvancedButtonAction?.Invoke(GameType.Advanced);
         }

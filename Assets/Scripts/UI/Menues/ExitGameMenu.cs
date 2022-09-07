@@ -10,17 +10,22 @@ namespace UI.Menues
         [SerializeField] private Button noButton;
 
         public Action QuitButtonAction;
-        public Action BackAction;
-        public override void Init()
+        public void OnEnable()
         {
             GetChildrenRect();
         
             yesButton.onClick.AddListener(YesButtonDown);
-            // noButton.onClick.AddListener(BackButtonDown);
+            noButton.onClick.AddListener(BackButtonDown);
         
             gameObject.SetActive(false);
         
         }
+
+        private void BackButtonDown()
+        {
+            BackAction?.Invoke();
+        }
+
         private void YesButtonDown()
         {
             QuitButtonAction?.Invoke();

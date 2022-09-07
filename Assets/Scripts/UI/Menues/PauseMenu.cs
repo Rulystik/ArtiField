@@ -15,16 +15,21 @@ namespace UI.Menues
         public Action ExitButtonAction;
         public Action OptionsButtonAction;
     
-        public override void Init()
+        public void OnEnable()
         {
             GetChildrenRect();
 
             leaveButton.onClick.AddListener(LeaveTheGame);
             optionsButton.onClick.AddListener(OptionsButtonDown);
             exitButton.onClick.AddListener(ExitGame);
-            // resumeButton.onClick.AddListener(BackButtonDown);
+            resumeButton.onClick.AddListener(BackButtonDown);
 
             gameObject.SetActive(false);
+        }
+
+        private void BackButtonDown()
+        {
+            
         }
 
         private void OptionsButtonDown()

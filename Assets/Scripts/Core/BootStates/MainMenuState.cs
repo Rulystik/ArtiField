@@ -1,39 +1,39 @@
 using System;
+using Core.Data;
+using Core.Other;
 using Core.Services;
 using DG.Tweening;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 namespace Core.States
 {
     public class MainMenuState : BaseState
     {
-        private UIPreparer UIPreparer { get; set; }
-        public MainMenuState(BootStateMachine bootStateMachine, Factory factory, SceneLoader sceneLoader,
-            GlobalParams globalParams) : base(bootStateMachine, factory, sceneLoader, globalParams)
-        {
-            
-        }
+        public MainMenuState(Factory factory, SceneLoader sceneLoader, BootData globalData) : 
+            base(factory, sceneLoader, globalData){}
+
+
         public override void Enter()
         {
-            SceneLoader.LoadScene("MainMenu", Loaded);
+            SceneLoader.LoadScene(Const.MenuScene, Loaded);
         }
 
-        public override void Exit(Action doStaff)
+        public override void Exit()
         {
-            UIPreparer.FadeInTransition(doStaff);
+            float delay = UIPreparer.FadeInTransition();
+            DOVirtual.DelayedCall(delay, () => OnExitIsDone());
         }
-
+        
         public void Loaded()
         {
             UIPreparer = Factory.GetGameObjectComponent<UIPreparer>();
-            UIPreparer.Init();
             var Menu = Factory.GetGameObjectComponent<Menu>(UIPreparer.ScreenArea);
-            Menu.Init(BootStateMachine, GlobalParams);
             
             UIPreparer.FadeOutTransition();
             
             Debug.Log("MainMenu is loaded");
         }
-  
+
     }
 }

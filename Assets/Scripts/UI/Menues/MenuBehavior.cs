@@ -24,7 +24,7 @@ namespace UI.Menues
         {
             foreach (var obj in MenuList)
             {
-                obj.Init();
+                // obj.Init();
             }
         }
     
@@ -77,7 +77,7 @@ namespace UI.Menues
                 if (j == downList.Count - 1 )
                 {
                     DOVirtual.DelayedCall(delay, () => obj.DOScale(Vector3.zero, 0.2f));
-                    DOVirtual.DelayedCall(delay + 0.2f, () => downMenu.ActiveOff());
+                    // DOVirtual.DelayedCall(delay + 0.2f, () => downMenu.ActiveOff());
                 
                     if (upMenu != null)
                     {
@@ -123,7 +123,7 @@ namespace UI.Menues
         
             float i = deley;
         
-            DOVirtual.DelayedCall(i, () => upMenu.ActiveOn());
+            // DOVirtual.DelayedCall(i, () => upMenu.ActiveOn());
 
             for (int j = 0; j < upList.Count; j++)
             {

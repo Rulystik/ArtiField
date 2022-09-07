@@ -6,7 +6,7 @@ namespace UI.Menues
     public class OptionsMenu : BaseMenu
     {
         [SerializeField] private Button backButton;
-        public override void Init()
+        public void OnEnable()
         {
             GetChildrenRect();
             // backButton.onClick.AddListener();

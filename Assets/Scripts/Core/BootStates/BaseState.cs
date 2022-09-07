@@ -1,26 +1,38 @@
 ﻿using System;
+using Core.Data;
 using Core.Services;
+using UnityEngine.XR;
 
 namespace Core.States
 {
     public abstract class BaseState : IState
     {
-        protected BootStateMachine BootStateMachine { get; }
         protected Factory Factory { get; }
         protected SceneLoader SceneLoader { get; }
-        protected GlobalParams GlobalParams { get; }
+        protected BootData GlobalParams { get; }
+        
+        protected UIPreparer UIPreparer { get; set; }
 
-        public BaseState(BootStateMachine stateMachine, Factory factory, SceneLoader sceneLoader, GlobalParams globalParams)
+        public event Action OnChangeState;
+        public event Action OnExitDone;
+
+        public BaseState(Factory factory, SceneLoader sceneLoader, BootData globalParams)
         {
-            BootStateMachine = stateMachine;
             Factory = factory;
             SceneLoader = sceneLoader;
             GlobalParams = globalParams;
         }
 
+        protected void ChangeState()
+        {
+            OnChangeState?.Invoke();
+        }
+        protected void OnExitIsDone()
+        {
+            OnExitDone?.Invoke();
+        }
+            
         public abstract void Enter();
-        public abstract void Exit(Action doStaff);
-        
-
+        public abstract void Exit();
     }
 }

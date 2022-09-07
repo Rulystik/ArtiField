@@ -1,4 +1,5 @@
 ﻿using Core.Data;
+using Core.Other;
 using UnityEngine;
 
 namespace Core.Services
@@ -10,9 +11,9 @@ namespace Core.Services
 
         public AssetProvider()
         {
-            _spritesConfig = Resources.Load<SpritesConfig>("SpritesConfig");
+            _spritesConfig = Resources.Load<SpritesConfig>(Const.SpritesConfig);
             _spritesConfig.Init();
-            _prefabsConfigs = Resources.Load<PrefabsConfig>("PrefabsConfig");
+            _prefabsConfigs = Resources.Load<PrefabsConfig>(Const.PrefabsConfig);
             _prefabsConfigs.Init();
         }
         

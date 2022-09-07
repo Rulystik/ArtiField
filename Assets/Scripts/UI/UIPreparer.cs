@@ -1,38 +1,35 @@
-using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIPreparer : MonoBehaviour
 {
-    [SerializeField] private GameObject _screenArea;
+    [SerializeField] private RectTransform _screenArea;
     [SerializeField] private GameObject _blackTransition;
-    public Transform ScreenArea { get; private set; }
+    [SerializeField] private float _speedFading = 0.3f;
 
-    public void Init()
+    private Image _fadeImage;
+    public RectTransform ScreenArea => _screenArea;
+
+    public void OnEnable()
     {
-        ScreenArea = _screenArea.transform;
-        UpdateScreenArea();
+        SetScreenArea();
+        _fadeImage = _blackTransition.GetComponent<Image>();
     }
-    public void FadeInTransition(Action doStaff)
+    public float FadeInTransition()
     {
         _blackTransition.SetActive(true);
-        var image = _blackTransition.GetComponent<Image>();
-        image.DOFade(0, 0);
-        image.DOFade(1, 0.3f).OnComplete(()=> doStaff?.Invoke());
-
+        _fadeImage.DOFade(1, _speedFading);
+        return _speedFading;
     }
     public void FadeOutTransition()
     {
-        var image = _blackTransition.GetComponent<Image>();
-        image.DOFade(1, 0);
-        image.DOFade(0, 0.3f).OnComplete(()=> _blackTransition.SetActive(false));
+        _fadeImage.DOFade(0, _speedFading).OnComplete(()=> _blackTransition.SetActive(false));
     }
 
-    void UpdateScreenArea()
+    void SetScreenArea()
     {
         var safeArea = Screen.safeArea;
-        var areaRect = _screenArea.GetComponent<RectTransform>();
 
         var anchorMin = safeArea.position;
         var anchorMax = safeArea.position + safeArea.size;
@@ -43,7 +40,7 @@ public class UIPreparer : MonoBehaviour
         anchorMax.x /= Screen.width;
         anchorMax.y /= Screen.height;
 
-        areaRect.anchorMin = anchorMin;
-        areaRect.anchorMax = anchorMax;
+        _screenArea.anchorMin = anchorMin;
+        _screenArea.anchorMax = anchorMax;
     }
 }

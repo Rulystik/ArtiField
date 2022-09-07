@@ -1,4 +1,5 @@
 ﻿using System;
+using Core.Data;
 using Core.Services;
 
 namespace Core.States
@@ -6,8 +7,8 @@ namespace Core.States
     public class MultiplayerLobbyState : BaseState
     {
         
-        public MultiplayerLobbyState(BootStateMachine bootStateMachine, Factory factory, SceneLoader sceneLoader,
-            GlobalParams globalParams) : base(bootStateMachine, factory, sceneLoader, globalParams)
+        public MultiplayerLobbyState(Factory factory, SceneLoader sceneLoader,
+            BootData globalParams) : base(factory, sceneLoader, globalParams)
         {
             
         }
@@ -17,7 +18,7 @@ namespace Core.States
             
         }
 
-        public override void Exit(Action doStaff)
+        public override void Exit(BootStateEnum state)
         {
             
         }

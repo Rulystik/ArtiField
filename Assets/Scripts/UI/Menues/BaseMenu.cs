@@ -1,27 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using DG.Tweening.Plugins.Options;
 using UnityEngine;
 
 namespace UI.Menues
 {
     public abstract class BaseMenu : MonoBehaviour, IMenu
     {
-        public List<RectTransform> AllChildrenRect { get ;} = new List<RectTransform>();
-        public Action AnimationCallBAck;
+        public List<RectTransform> AllChildrenRect { get ;}
 
-        public abstract void Init();
-
-        public void ActiveOn()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public void ActiveOff()
-        {
-            gameObject.SetActive(false);
-        }
-        public void GetChildrenRect()
+        protected void GetChildrenRect()
         {
             foreach (Transform obj in transform)
             {
@@ -31,9 +20,7 @@ namespace UI.Menues
 
         public float Open(float del = 0f)
         {
-            float deley = 0;
-            ActiveOn();
-            SetScale(0);
+            float deley = del;
 
             foreach (var rectTransform in AllChildrenRect)
             {
@@ -44,18 +31,22 @@ namespace UI.Menues
             return deley;
         }
 
-        public void Close()
+        public float Close()
         {
+            float deley = 0f;
             foreach (var rectTransform in AllChildrenRect)
             {
-                rectTransform.DOScale(Vector3.zero, 0.2f);
+                DOVirtual.DelayedCall(deley, () => rectTransform.DOScale(Vector3.zero, 0.2f));
+                deley += 0.2f;
             }
+
+            return deley;
         }
-        private void SetScale(int scale)
+        protected void SetScaleZero()
         {
             foreach (var rectTransform in AllChildrenRect)
             {
-                rectTransform.DOScale(Vector3.zero, scale);
+                rectTransform.DOScale(Vector3.zero, 0);
             }
         }
     }
