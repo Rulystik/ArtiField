@@ -4,27 +4,28 @@ using UnityEngine.UI;
 
 namespace UI.Menues
 {
-    public class ExitGameMenu : BaseMenu
+    public class ExitGameMenu : BaseMenu, IMenu
     {
         [SerializeField] private Button yesButton;
         [SerializeField] private Button noButton;
 
         public Action QuitButtonAction;
+        public Action NoButtonAction;
         public void OnEnable()
         {
             GetChildrenRect();
         
             yesButton.onClick.AddListener(YesButtonDown);
-            noButton.onClick.AddListener(BackButtonDown);
-        
-            gameObject.SetActive(false);
-        
+            noButton.onClick.AddListener(NoButtonDown);
+            
+            SetScaleZero();
         }
 
-        private void BackButtonDown()
+        private void NoButtonDown()
         {
-            BackAction?.Invoke();
+            NoButtonAction?.Invoke();
         }
+
 
         private void YesButtonDown()
         {

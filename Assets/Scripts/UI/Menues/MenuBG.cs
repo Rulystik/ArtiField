@@ -1,18 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+using UI.Menues;
 using UnityEngine;
 
-public class MenuBG : MonoBehaviour
+public class MenuBg : BaseMenu, IMenu
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GetChildrenRect();
+        SetScaleZero();
     }
 }

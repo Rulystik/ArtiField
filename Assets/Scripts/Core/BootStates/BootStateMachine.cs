@@ -2,69 +2,50 @@
 using System.Collections.Generic;
 using Core.Data;
 using Core.Services;
+using DG.Tweening;
 
 namespace Core.States
 {
     public class BootStateMachine 
     {
-        private Dictionary<Type, IState> _states;
+        private Dictionary<BootStateEnum, IBootState> _states;
 
-        private IState _currentState;
-        private IState _nextState;
+        private IBootState currentBootState;
         
         private Factory _factory;
-        private SceneLoader _sceneLoader;
-        private BootData _globalData;
-        //
+        private RunTimeData _runTimeData;
         
-        public BootStateMachine(ICorutine coroutine)
+        
+        public BootStateMachine()
         {
-            _factory = new Factory();
-            _sceneLoader = new SceneLoader(coroutine);
-            _globalData = new BootData();
+            _runTimeData = new RunTimeData();
 
-            _states = new Dictionary<Type, IState>()
+            _states = new Dictionary<BootStateEnum, IBootState>()
             {
-                [typeof(MainMenuState)] = new MainMenuState(_factory, _sceneLoader, _globalData),
-                [typeof(PlayGameState)] = new PlayGameState(_factory, _sceneLoader, _globalData),
-                [typeof(MultiplayerLobbyState)] = new MultiplayerLobbyState(_factory, _sceneLoader, _globalData)
+                [BootStateEnum.Menu] = new MainMenuBootState(_runTimeData),
+                [BootStateEnum.Game] = new PlayGameBootState(_runTimeData),
+                [BootStateEnum.Lobby] = new LobbyBootState(_runTimeData)
             };
-            foreach (var state in _states)
-            {
-                state.Value.OnChangeState += StateChange;
-                state.Value.OnExitDone += EnterState;
-            }
-            
-            StateChange();
-            EnterState();
+            BootStateChange();
         }
         
-        public void StateChange()
+        public void BootStateChange()
         {
-            switch (_globalData.BootState)
+            float deley = 0;
+            if (currentBootState != null)
             {
-                case BootStateEnum.Game :
-                    SetNextState<PlayGameState>();
-                    break;
-                case BootStateEnum.Menu :
-                    SetNextState<MainMenuState>();
-                    break;
-                case BootStateEnum.Lobby :
-                    SetNextState<MultiplayerLobbyState>();
-                    break;
+                currentBootState.OnStateDoneEvent -= BootStateChange;
+                deley = currentBootState.Exit();
             }
-            _currentState?.Exit();
+
+            DOVirtual.DelayedCall(deley, () =>
+            {
+                currentBootState = _states[_runTimeData.BootState];
+                currentBootState.OnStateDoneEvent += BootStateChange;
+                currentBootState.Enter();
+            });
         }
 
-        private void SetNextState<TState>() where TState : IState
-        {
-            _nextState = _states[typeof(TState)];
-        }
-        private void EnterState()
-        {
-            _currentState = _nextState;
-            _currentState.Enter();
-        }
         
     }
 }

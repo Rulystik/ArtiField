@@ -26,7 +26,7 @@ namespace UI
         private bool ableToShoot;
 
         private RectTransform playerFieldRect;
-        private RectTransform enemyFieldRect;
+        private RectTransform enemyFieldRect; 
 
         public Dictionary<int, GameTile> playerViewObjects;
         public Dictionary<int, GameTile> enemyViewObjects;

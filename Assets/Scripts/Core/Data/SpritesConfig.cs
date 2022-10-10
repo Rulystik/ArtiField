@@ -15,11 +15,11 @@ namespace Core.Data
         {
             _sprites = new Dictionary<string, Sprite>();
             
-            foreach (var icon in _icons)
+            foreach (var config in _icons)
             {
-                if (_sprites.ContainsKey(icon.Name) == false)
+                if (_sprites.ContainsKey(config.Name) == false)
                 {
-                    _sprites.Add(icon.Name, icon.Sprite);
+                    _sprites.Add(config.Name, config.Sprite);
                 }
             }
         }

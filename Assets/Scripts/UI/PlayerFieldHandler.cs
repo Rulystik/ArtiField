@@ -12,7 +12,6 @@ namespace UI
         [SerializeField] private BattleFieldView battleFieldView;
         [SerializeField] private Button rotateButton;
 
-        private bool canRotate;
         private int posID;
 
         private Color normal;
@@ -23,7 +22,6 @@ namespace UI
 
         private void Start()
         {
-            canRotate = false;
             rotateButton.onClick.AddListener(Rotate);
             placersList = new List<Placer>();
         

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI.Menues
 {
-    public class PauseMenu : BaseMenu
+    public class PauseMenu : BaseMenu, IMenu
     {
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button leaveButton;
@@ -14,22 +14,21 @@ namespace UI.Menues
         public Action LeaveButtonAction;
         public Action ExitButtonAction;
         public Action OptionsButtonAction;
+        public Action BackButtonAction;
     
         public void OnEnable()
         {
             GetChildrenRect();
-
             leaveButton.onClick.AddListener(LeaveTheGame);
             optionsButton.onClick.AddListener(OptionsButtonDown);
             exitButton.onClick.AddListener(ExitGame);
             resumeButton.onClick.AddListener(BackButtonDown);
-
-            gameObject.SetActive(false);
+            SetScaleZero();
         }
 
         private void BackButtonDown()
         {
-            
+            BackButtonAction?.Invoke();
         }
 
         private void OptionsButtonDown()

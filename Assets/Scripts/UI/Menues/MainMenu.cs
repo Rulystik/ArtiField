@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI.Menues
 {
-    public class MainMenu : BaseMenu
+    public class MainMenu : BaseMenu, IMenu
     {
         [SerializeField] private Button singleGameButton;
         [SerializeField] private Button multiGameButton;
@@ -21,7 +21,6 @@ namespace UI.Menues
         public void OnEnable()
         {
             GetChildrenRect();
-        
             singleGameButton.onClick.AddListener(SingleButtonDown);
             multiGameButton.onClick.AddListener(MultiButtonDown);
             exitGameButton.onClick.AddListener(ExitButtonDown);
@@ -29,10 +28,6 @@ namespace UI.Menues
             SetScaleZero();
         }
 
-        public void Init(Action<GameType> singleMulti)
-        {
-            SingleMultiButtonAction += singleMulti;
-        }
 
         private void ExitButtonDown()
         {

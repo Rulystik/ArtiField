@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Core.Data
 {
-    [CreateAssetMenu(fileName = "PrefabsConfig", menuName = "Configs/PrefabConfig", order = 51)]
+    [CreateAssetMenu(fileName = "ConfigComponentList", menuName = "Configs/ConfigComponentList", order = 51)]
     
     public class PrefabsConfig : ScriptableObject
     {
@@ -14,12 +14,12 @@ namespace Core.Data
         public void Init()
         {
             _configGameObjects = new Dictionary<Type, GameObject>();
-            foreach (var value in _prefabConfig)
+            foreach (var config in _prefabConfig)
             {
-                var key = value.GetType();
+                var key = config.GetType();
                 if (_configGameObjects.ContainsKey(key) == false)
                 {
-                    _configGameObjects.Add(key, value.gameObject);
+                    _configGameObjects.Add(key, config.gameObject);
                 }
             }
         }
@@ -30,7 +30,7 @@ namespace Core.Data
             {
                 return _configGameObjects[key];
             }
-            Debug.Log($"PrefabsConfig - Wrong or non-existing Component");
+            Debug.Log($"{name} - Wrong or non-existing Component");
             return null;
         }
     }

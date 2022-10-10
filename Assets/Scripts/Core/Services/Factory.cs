@@ -13,10 +13,9 @@ namespace Core.Services
         
         public T GetGameObjectComponent<T>(Transform parent = null) where T: Component
         {
-            var obj =  Object.Instantiate(_assets.GetPrefab<T>(), parent);
-            return obj.GetComponent<T>();
+            var obj =  Object.Instantiate(_assets.GetPrefab<T>(), parent).GetComponent<T>();
+            return obj;
         }
-        
         public Sprite GetSprite (string name)
         {
            return _assets.GetSprite(name);

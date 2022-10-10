@@ -4,12 +4,12 @@ namespace Controls
 {
     public class MenuController
     {
-        private Menu _menu;
-        private BootData _globalData;
+        private MenuView menuView;
+        private RunTimeData _globalData;
 
-        public MenuController(Menu menu, BootData globalData)
+        public MenuController(MenuView menuView, RunTimeData globalData)
         {
-            _menu = menu;
+            this.menuView = menuView;
             _globalData = globalData;
         }
 

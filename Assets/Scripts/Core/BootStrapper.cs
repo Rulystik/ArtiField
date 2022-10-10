@@ -3,24 +3,16 @@ using System.Collections;
 using Core.States;
 using UnityEngine;
 
-public interface ICorutine
-{
-    Coroutine StartCoroutine(IEnumerator enumerator);
-}
 namespace Core
 {
-    public class BootStrapper : MonoBehaviour, ICorutine
+    public class BootStrapper : MonoBehaviour
     {
-        public BootStateMachine StateMachine;
+        private BootStateMachine _stateMachine;
 
         private void Awake()
         {
             DontDestroyOnLoad(this);
-        }
-
-        void Start()
-        {
-            StateMachine = new BootStateMachine(this);
+            _stateMachine = new BootStateMachine();
         }
     }
 }
